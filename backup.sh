@@ -1,8 +1,14 @@
-#!/bin/sh
+#!/bin/sh -ex
 
 if [ ! -d $(dirname "$BACKUP_FILE") ]
 then
   mkdir -p $(dirname "$BACKUP_FILE")
+fi
+
+cd $(dirname "$DB_FILE")
+if [ ! -d backups ]
+then
+  mkdir backups
 fi
 
 if [ $TIMESTAMP = true ]
@@ -10,13 +16,13 @@ then
   BACKUP_FILE="$(echo "$BACKUP_FILE")_$(date "+%F-%H%M%S")"
 fi
 
-/usr/bin/sqlite3 $DB_FILE ".backup $BACKUP_FILE.tmp"
-/bin/tar czf $BACKUP_FILE $BACKUP_FILE.tmp attachments
-rm $BACKUP_FILE.tmp
+bd=$(dirname "$BACKUP_FILE")
+bf=$(basename "$BACKUP_FILE")
 
-if [ $? -eq 0 ] 
-then 
-  echo "$(date "+%F %T") - Backup successfull"
-else
-  echo "$(date "+%F %T") - Backup unsuccessfull"
-fi
+TMP_FILE=backups/$bf
+/usr/bin/sqlite3 $(basename "$DB_FILE") ".backup $TMP_FILE"
+/bin/tar czf backups/$bf.tar.gz $TMP_FILE $(ls -d attachments 2>/dev/null)
+rm $TMP_FILE
+mv backups/$bf.tar.gz $bd/
+
+echo "$(date "+%F %T") - Backup successfull"
