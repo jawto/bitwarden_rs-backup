@@ -1,4 +1,4 @@
-#!/bin/sh -ex
+#!/bin/sh
 
 if [ ! -d $(dirname "$BACKUP_FILE") ]
 then
