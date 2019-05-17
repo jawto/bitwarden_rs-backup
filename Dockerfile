@@ -15,7 +15,6 @@ ENV GID 100
 ENV LOGFILE /app/log/backup.log
 
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
-COPY backup.sh /app/
 
 RUN mkdir /app/log/ \
     && chown -R app:app /app/ \
