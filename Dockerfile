@@ -16,7 +16,7 @@ ENV LOGFILE /app/log/backup.log
 
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 
-RUN mkdir /app/log/ \
+RUN mkdir -p /app/log/ \
     && chown -R app:app /app/ \
     && chmod -R 777 /app/ \
     && chmod +x /usr/local/bin/entrypoint.sh 
