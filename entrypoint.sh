@@ -1,7 +1,5 @@
 #!/bin/sh
 
-#set -ux
-
 echo "Running as $(id)"
 
 # Restart script as user "app:app"
@@ -28,6 +26,7 @@ then
   mkdir backups
 fi
 
+of=$(basename "$BACKUP_FILE")
 if [ $TIMESTAMP = true ]
 then
   BACKUP_FILE="$(echo "$BACKUP_FILE")_$(date "+%F-%H%M%S")"
@@ -41,5 +40,8 @@ TMP_FILE=backups/$bf
 /bin/tar czf backups/$bf.tar.gz $TMP_FILE $(ls -d attachments 2>/dev/null)
 rm $TMP_FILE
 mv backups/$bf.tar.gz $bd/
+
+# Delete backups older than DAYS_TO_KEEP
+find $bd -name "${of}*tar.gz" -type f -mtime +$DAYS_TO_KEEP -delete -print
 
 echo "$(date "+%F %T") - Backup successfull"

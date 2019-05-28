@@ -13,6 +13,7 @@ ENV TIMESTAMP false
 ENV UID 100
 ENV GID 100
 ENV LOGFILE /app/log/backup.log
+ENV DAYS_TO_KEEP 14
 
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 
